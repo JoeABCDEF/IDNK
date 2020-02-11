@@ -7,25 +7,25 @@
                     Login
                 </h1>
                 <div>
-                    <Input class="login_input" placeholder="Username" v-model="uname" ref="userNameInput">
+                    <Input id="uname_input" class="login_input" placeholder="Username" allowClear
+                        @change="input_uname" v-model="uname">
                         <Tooltip slot="suffix" title="Extra information">
                             <Icon type="info-circle" style="color: rgba(0,0,0,.45)" />
                         </Tooltip>
                     </Input>
-                    <Input class="login_input" placeholder="Password" v-model="pwd" ref="userNameInput">
-                        <Tooltip slot="suffix" title="Extra information">
-                            <Icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-                        </Tooltip>
+                    <Input id="pwd_input" class="login_input" placeholder="Password"  
+                        @change="input_pwd" v-model="pwd" :type="pwd_type">
+                        <Icon slot="suffix" @click="pwd_type_change" :type="pwd_is_show" style="color: rgba(0,0,0,.45)" />
                     </Input>
                     <!-- <InputPassword placeholder="input password" /> -->
                 </div>
             </div>
             <div class="login_button">
-                <a-button type="primary" :style="btn_style_login" loading=false>
+                <a-button type="primary" :style="btn_style_login" @click="login_click" :loading="loading">
                     {{btn_log}}
                 </a-button>
-                <a-button :style="btn_style_reg">
-                    Loading
+                <a-button :disabled="disabled" :style="btn_style_reg" @click="page_to('lo_register')"> 
+                    New curiosity
                 </a-button>
             </div>
         </div>
@@ -33,7 +33,7 @@
             <p>
                 Forget
                 <!-- <router-link to='/lo_forget' is='a'>password</router-link> -->
-                <a @click="page_to('lo_forget')">password</a>
+                <a :disabled="disabled" @click="page_to('lo_forget')">password</a>
                 or username
             </p>
         </div>
@@ -73,7 +73,12 @@ export default {
             uname:'',
             pwd:'',
             //
-            btn_log:"登陆"
+            btn_log:"Login",
+            loading:false,
+            disabled:false,
+            //
+            pwd_is_show:"eye-invisible",
+            pwd_type:'password'
         }
     },
     mounted(){
@@ -86,11 +91,38 @@ export default {
         }
     },
     methods:{
-        backRouter(){
-            this.$el.style.right = '-100%';
-            setTimeout(() => {
-                this.$router.push('/');
-            }, 390);
+        backRouter(){//返回按钮
+            if(!this.disabled){
+                this.$el.style.right = '-100%';
+                setTimeout(() => {
+                    this.$router.push('/');
+                }, 390);
+            }
+        },
+        login_click(){//登录按钮
+            this.loading = true;
+            this.btn_log = "";
+            this.disabled = true;
+        },
+        page_to(key){//路由跳转
+            this.$router.push({
+                name:key,
+                params:{
+                    is_animation:true
+                }
+            }).catch(err => {err});
+            // this.$router.push('/lo_login').catch(err => {err});
+        },
+        input_uname(){//input uname 的 change 事件
+            console.log(this.uname);
+        },
+        input_pwd(){//input pwd 的 change 事件
+            console.log(this.pwd);
+        },
+        pwd_type_change(){
+            this.pwd_is_show == "eye" ?
+            (this.pwd_is_show = "eye-invisible", this.pwd_type = "password")
+            : (this.pwd_is_show = "eye", this.pwd_type = "text");
         }
     }
 }
@@ -121,8 +153,12 @@ export default {
         justify-content space-between
         align-items center
         padding 90px 0
+        padding-top 60px
+        h1
+            font-size 40px
         .login_input
             height 50px
+            margin-top 30px
             // input
             //     border 0!important
             //     border-bottom 1px solid #d9d9d9

@@ -8,8 +8,8 @@
             :style="btn_style_login">登陆</router-link>
             <router-link to='/lo_register' is='a-button'
             :style="btn_style_reg">注册</router-link> -->
-            <a-button type="primary" @click="page_to('lo_login')" :style="btn_style_login">登陆</a-button>
-            <a-button :style="btn_style_reg" @click="page_to('lo_register')">注册</a-button>
+            <a-button type="primary" @click="page_to('lo_login')" :style="btn_style_login">Login</a-button>
+            <a-button :style="btn_style_reg" @click="page_to('lo_register')">New curiosity</a-button>
         </div>
         <div class="login_notcie">
             <p>
